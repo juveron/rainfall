@@ -1,0 +1,50 @@
+pdf @main
+
+            ; DATA XREF from entry0 @ 0x8048437
+┌ 13: int main (int argc, char **argv, char **envp);
+│           0x0804853f      55             push ebp
+│           0x08048540      89e5           mov ebp, esp
+│           0x08048542      83e4f0         and esp, 0xfffffff0
+│           0x08048545      e88affffff     call sym.p
+│           0x0804854a      c9             leave
+└           0x0804854b      c3             ret
+
+[0x08048420]> pdf @sym.p
+            ; CALL XREF from main @ 0x8048545
+┌ 107: sym.p (int32_t arg_4h);
+│           ; var char *src @ ebp-0x4c
+│           ; var int32_t var_ch @ ebp-0xc
+│           ; arg int32_t arg_4h @ ebp+0x4
+│           ; var int32_t var_4h @ esp+0x4
+│           0x080484d4      55             push ebp
+│           0x080484d5      89e5           mov ebp, esp
+│           0x080484d7      83ec68         sub esp, 0x68
+│           0x080484da      a160980408     mov eax, dword [obj.stdout] ; obj.stdout__GLIBC_2.0
+│                                                                      ; [0x8049860:4]=0
+│           0x080484df      890424         mov dword [esp], eax        ; FILE *stream
+│           0x080484e2      e8c9feffff     call sym.imp.fflush         ; int fflush(FILE *stream)
+│           0x080484e7      8d45b4         lea eax, [src]
+│           0x080484ea      890424         mov dword [esp], eax        ; char *s
+│           0x080484ed      e8cefeffff     call sym.imp.gets           ; char *gets(char *s)
+│           0x080484f2      8b4504         mov eax, dword [arg_4h]
+│           0x080484f5      8945f4         mov dword [var_ch], eax
+│           0x080484f8      8b45f4         mov eax, dword [var_ch]
+│           0x080484fb      25000000b0     and eax, 0xb0000000
+│           0x08048500      3d000000b0     cmp eax, 0xb0000000
+│       ┌─< 0x08048505      7520           jne 0x8048527
+│       │   0x08048507      b820860408     mov eax, str.__p__n         ; 0x8048620 ; "(%p)\n"
+│       │   0x0804850c      8b55f4         mov edx, dword [var_ch]
+│       │   0x0804850f      89542404       mov dword [var_4h], edx
+│       │   0x08048513      890424         mov dword [esp], eax        ; const char *format
+│       │   0x08048516      e885feffff     call sym.imp.printf         ; int printf(const char *format)
+│       │   0x0804851b      c70424010000.  mov dword [esp], 1          ; int status
+│       │   0x08048522      e8a9feffff     call sym.imp._exit          ; void _exit(int status)
+│       │   ; CODE XREF from sym.p @ 0x8048505
+│       └─> 0x08048527      8d45b4         lea eax, [src]
+│           0x0804852a      890424         mov dword [esp], eax        ; const char *s
+│           0x0804852d      e8befeffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x08048532      8d45b4         lea eax, [src]
+│           0x08048535      890424         mov dword [esp], eax        ; const char *src
+│           0x08048538      e8a3feffff     call sym.imp.strdup         ; char *strdup(const char *src)
+│           0x0804853d      c9             leave
+└           0x0804853e      c3             ret

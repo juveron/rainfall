@@ -1,0 +1,47 @@
+[0x0804988c]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048407
+┌ 13: int main (int argc, char **argv, char **envp);
+│           0x0804851a      55             push ebp
+│           0x0804851b      89e5           mov ebp, esp
+│           0x0804851d      83e4f0         and esp, 0xfffffff0
+│           0x08048520      e87fffffff     call sym.v
+│           0x08048525      c9             leave
+└           0x08048526      c3             ret
+
+[0x0804988c]> pdf @sym.v
+            ; CALL XREF from main @ 0x8048520
+┌ 118: sym.v ();
+│           ; var char *format @ ebp-0x208
+│           ; var size_t size @ esp+0x4
+│           ; var FILE *nitems @ esp+0x8
+│           ; var FILE *stream @ esp+0xc
+│           0x080484a4      55             push ebp
+│           0x080484a5      89e5           mov ebp, esp
+│           0x080484a7      81ec18020000   sub esp, 0x218
+│           0x080484ad      a160980408     mov eax, dword [obj.stdin]  ; obj.stdin__GLIBC_2.0
+│                                                                      ; [0x8049860:4]=0
+│           0x080484b2      89442408       mov dword [nitems], eax     ; FILE *stream
+│           0x080484b6      c74424040002.  mov dword [size], 0x200     ; [0x200:4]=-1 ; 512 ; int size
+│           0x080484be      8d85f8fdffff   lea eax, [format]
+│           0x080484c4      890424         mov dword [esp], eax        ; char *s
+│           0x080484c7      e8d4feffff     call sym.imp.fgets          ; char *fgets(char *s, int size, FILE *stream)
+│           0x080484cc      8d85f8fdffff   lea eax, [format]
+│           0x080484d2      890424         mov dword [esp], eax        ; const char *format
+│           0x080484d5      e8b6feffff     call sym.imp.printf         ; int printf(const char *format)
+│           0x080484da      a18c980408     mov eax, dword [obj.m]      ; [0x804988c:4]=0
+│           0x080484df      83f840         cmp eax, 0x40               ; 64
+│       ┌─< 0x080484e2      7534           jne 0x8048518
+│       │   0x080484e4      a180980408     mov eax, dword [obj.stdout] ; obj.stdout__GLIBC_2.0
+│       │                                                              ; [0x8049880:4]=0
+│       │   0x080484e9      89c2           mov edx, eax
+│       │   0x080484eb      b800860408     mov eax, str.Wait_what___n  ; 0x8048600 ; "Wait what?!\n"
+│       │   0x080484f0      8954240c       mov dword [stream], edx     ; FILE *stream
+│       │   0x080484f4      c74424080c00.  mov dword [nitems], 0xc     ; [0xc:4]=-1 ; 12 ; size_t nitems
+│       │   0x080484fc      c74424040100.  mov dword [size], 1         ; size_t size
+│       │   0x08048504      890424         mov dword [esp], eax        ; const void *ptr
+│       │   0x08048507      e8a4feffff     call sym.imp.fwrite         ; size_t fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream)
+│       │   0x0804850c      c704240d8604.  mov dword [esp], str._bin_sh ; [0x804860d:4]=0x6e69622f ; "/bin/sh" ; const char *string
+│       │   0x08048513      e8a8feffff     call sym.imp.system         ; int system(const char *string)
+│       │   ; CODE XREF from sym.v @ 0x80484e2
+│       └─> 0x08048518      c9             leave
+└           0x08048519      c3             ret

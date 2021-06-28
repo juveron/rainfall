@@ -1,0 +1,132 @@
+[0x08048540]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048557
+┌ 166: int main (char **argv, char **envp);
+│           ; var int32_t var_bp_4h @ ebp-0x4
+│           ; arg char **argv @ ebp+0x8
+│           ; arg char **envp @ ebp+0xc
+│           ; var int32_t var_4h @ esp+0x4
+│           ; var int32_t var_10h @ esp+0x10
+│           ; var int32_t var_14h @ esp+0x14
+│           ; var int32_t var_18h @ esp+0x18
+│           ; var int32_t var_1ch @ esp+0x1c
+│           0x080485f4      55             push ebp
+│           0x080485f5      89e5           mov ebp, esp
+│           0x080485f7      53             push ebx
+│           0x080485f8      83e4f0         and esp, 0xfffffff0
+│           0x080485fb      83ec20         sub esp, 0x20
+│           0x080485fe      837d0801       cmp dword [argv], 1
+│       ┌─< 0x08048602      7f0c           jg 0x8048610
+│       │   0x08048604      c70424010000.  mov dword [esp], 1          ; int status
+│       │   0x0804860b      e8e0feffff     call sym.imp._exit          ; void _exit(int status)
+│       │   ; CODE XREF from main @ 0x8048602
+│       └─> 0x08048610      c704246c0000.  mov dword [esp], 0x6c       ; 'l'
+│                                                                      ; [0x6c:4]=-1 ; 108
+│           0x08048617      e814ffffff     call sym operator new(unsigned int) ; sym.imp.operator_new_unsigned_int_
+│           0x0804861c      89c3           mov ebx, eax
+│           0x0804861e      c74424040500.  mov dword [var_4h], 5       ; int32_t arg_ch
+│           0x08048626      891c24         mov dword [esp], ebx        ; int32_t arg_8h
+│           0x08048629      e8c8000000     call method N::N(int)       ; method.N.N_int_
+│           0x0804862e      895c241c       mov dword [var_1ch], ebx
+│           0x08048632      c704246c0000.  mov dword [esp], 0x6c       ; 'l'
+│                                                                      ; [0x6c:4]=-1 ; 108
+│           0x08048639      e8f2feffff     call sym operator new(unsigned int) ; sym.imp.operator_new_unsigned_int_
+│           0x0804863e      89c3           mov ebx, eax
+│           0x08048640      c74424040600.  mov dword [var_4h], 6       ; int32_t arg_ch
+│           0x08048648      891c24         mov dword [esp], ebx        ; int32_t arg_8h
+│           0x0804864b      e8a6000000     call method N::N(int)       ; method.N.N_int_
+│           0x08048650      895c2418       mov dword [var_18h], ebx
+│           0x08048654      8b44241c       mov eax, dword [var_1ch]
+│           0x08048658      89442414       mov dword [var_14h], eax
+│           0x0804865c      8b442418       mov eax, dword [var_18h]
+│           0x08048660      89442410       mov dword [var_10h], eax
+│           0x08048664      8b450c         mov eax, dword [envp]
+│           0x08048667      83c004         add eax, 4
+│           0x0804866a      8b00           mov eax, dword [eax]
+│           0x0804866c      89442404       mov dword [var_4h], eax     ; int32_t arg_ch
+│           0x08048670      8b442414       mov eax, dword [var_14h]
+│           0x08048674      890424         mov dword [esp], eax        ; int32_t arg_8h
+│           0x08048677      e892000000     call method N::setAnnotation(char*) ; method.N.setAnnotation_char_
+│           0x0804867c      8b442410       mov eax, dword [var_10h]
+│           0x08048680      8b00           mov eax, dword [eax]
+│           0x08048682      8b10           mov edx, dword [eax]
+│           0x08048684      8b442414       mov eax, dword [var_14h]
+│           0x08048688      89442404       mov dword [var_4h], eax
+│           0x0804868c      8b442410       mov eax, dword [var_10h]
+│           0x08048690      890424         mov dword [esp], eax
+│           0x08048693      ffd2           call edx
+│           0x08048695      8b5dfc         mov ebx, dword [var_bp_4h]
+│           0x08048698      c9             leave
+└           0x08048699      c3             ret
+
+
+[0x08048540]> pdf @0x080486f6
+            ;-- N::N(int):
+            ; CALL XREFS from main @ 0x8048629, 0x804864b
+┌ 23: method.N.N_int_ (int32_t arg_8h, int32_t arg_ch);
+│           ; arg int32_t arg_8h @ ebp+0x8
+│           ; arg int32_t arg_ch @ ebp+0xc
+│           0x080486f6      55             push ebp                    ; N::N(int)
+│           0x080486f7      89e5           mov ebp, esp
+│           0x080486f9      8b4508         mov eax, dword [arg_8h]
+│           0x080486fc      c70048880408   mov dword [eax], vtable.N.0 ; [0x8048848:4]=0x804873a method.N.virtual_0 ; ":\x87\x04\bN\x87\x04\b1N"
+│           0x08048702      8b4508         mov eax, dword [arg_8h]
+│           0x08048705      8b550c         mov edx, dword [arg_ch]
+│           0x08048708      895068         mov dword [eax + 0x68], edx
+│           0x0804870b      5d             pop ebp
+└           0x0804870c      c3             ret
+
+[0x08048540]> pdf @0x0804870e
+            ;-- N::setAnnotation(char*):
+            ; CALL XREF from main @ 0x8048677
+┌ 44: method.N.setAnnotation_char_ (void *s1, char *s);
+│           ; arg void *s1 @ ebp+0x8
+│           ; arg char *s @ ebp+0xc
+│           ; var char *s2 @ esp+0x4
+│           ; var size_t n @ esp+0x8
+│           0x0804870e      55             push ebp                    ; N::setAnnotation(char*)
+│           0x0804870f      89e5           mov ebp, esp
+│           0x08048711      83ec18         sub esp, 0x18
+│           0x08048714      8b450c         mov eax, dword [s]
+│           0x08048717      890424         mov dword [esp], eax        ; const char *s
+│           0x0804871a      e801feffff     call sym.imp.strlen         ; size_t strlen(const char *s)
+│           0x0804871f      8b5508         mov edx, dword [s1]
+│           0x08048722      83c204         add edx, 4
+│           0x08048725      89442408       mov dword [n], eax          ; size_t n
+│           0x08048729      8b450c         mov eax, dword [s]
+│           0x0804872c      89442404       mov dword [s2], eax         ; const void *s2
+│           0x08048730      891424         mov dword [esp], edx        ; void *s1
+│           0x08048733      e8d8fdffff     call sym.imp.memcpy         ; void *memcpy(void *s1, const void *s2, size_t n)
+
+[0x08048540]> pdf @0x0804873a
+            ;-- method.N.virtual_0:
+            ;-- N::operator+(N&):
+┌ 19: method.N.operator_N_ (int32_t arg_8h, int32_t arg_ch);
+│           ; arg int32_t arg_8h @ ebp+0x8
+│           ; arg int32_t arg_ch @ ebp+0xc
+│           0x0804873a      55             push ebp                    ; N::operator+(N&)
+│           0x0804873b      89e5           mov ebp, esp
+│           0x0804873d      8b4508         mov eax, dword [arg_8h]
+│           0x08048740      8b5068         mov edx, dword [eax + 0x68]
+│           0x08048743      8b450c         mov eax, dword [arg_ch]
+│           0x08048746      8b4068         mov eax, dword [eax + 0x68]
+│           0x08048749      01d0           add eax, edx
+│           0x0804874b      5d             pop ebp
+└           0x0804874c      c3             ret
+
+[0x08048540]> pdf @0x0804874e
+            ;-- method.N.virtual_4:
+            ;-- N::operator-(N&):
+┌ 23: method.N.operator__N_ (int32_t arg_8h, int32_t arg_ch);
+│           ; arg int32_t arg_8h @ ebp+0x8
+│           ; arg int32_t arg_ch @ ebp+0xc
+│           0x0804874e      55             push ebp                    ; N::operator-(N&)
+│           0x0804874f      89e5           mov ebp, esp
+│           0x08048751      8b4508         mov eax, dword [arg_8h]
+│           0x08048754      8b5068         mov edx, dword [eax + 0x68]
+│           0x08048757      8b450c         mov eax, dword [arg_ch]
+│           0x0804875a      8b4068         mov eax, dword [eax + 0x68]
+│           0x0804875d      89d1           mov ecx, edx
+│           0x0804875f      29c1           sub ecx, eax
+│           0x08048761      89c8           mov eax, ecx
+│           0x08048763      5d             pop ebp
+└           0x08048764      c3             ret

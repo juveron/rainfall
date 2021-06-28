@@ -1,0 +1,81 @@
+[0x08048440]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048457
+┌ 226: int main (char **envp);
+│           ; arg char **envp @ ebp+0xc
+│           ; var char *size @ esp+0x4
+│           ; var file*stream @ esp+0x8
+│           ; var void **var_18h @ esp+0x18
+│           ; var void **var_1ch @ esp+0x1c
+│           0x08048521      55             push ebp
+│           0x08048522      89e5           mov ebp, esp
+│           0x08048524      83e4f0         and esp, 0xfffffff0
+│           0x08048527      83ec20         sub esp, 0x20
+│           0x0804852a      c70424080000.  mov dword [esp], 8          ; size_t size
+│           0x08048531      e8bafeffff     call sym.imp.malloc         ;  void *malloc(size_t size)
+│           0x08048536      8944241c       mov dword [var_1ch], eax
+│           0x0804853a      8b44241c       mov eax, dword [var_1ch]
+│           0x0804853e      c70001000000   mov dword [eax], 1
+│           0x08048544      c70424080000.  mov dword [esp], 8          ; size_t size
+│           0x0804854b      e8a0feffff     call sym.imp.malloc         ;  void *malloc(size_t size)
+│           0x08048550      89c2           mov edx, eax
+│           0x08048552      8b44241c       mov eax, dword [var_1ch]
+│           0x08048556      895004         mov dword [eax + 4], edx
+│           0x08048559      c70424080000.  mov dword [esp], 8          ; size_t size
+│           0x08048560      e88bfeffff     call sym.imp.malloc         ;  void *malloc(size_t size)
+│           0x08048565      89442418       mov dword [var_18h], eax
+│           0x08048569      8b442418       mov eax, dword [var_18h]
+│           0x0804856d      c70002000000   mov dword [eax], 2
+│           0x08048573      c70424080000.  mov dword [esp], 8          ; size_t size
+│           0x0804857a      e871feffff     call sym.imp.malloc         ;  void *malloc(size_t size)
+│           0x0804857f      89c2           mov edx, eax
+│           0x08048581      8b442418       mov eax, dword [var_18h]
+│           0x08048585      895004         mov dword [eax + 4], edx
+│           0x08048588      8b450c         mov eax, dword [envp]
+│           0x0804858b      83c004         add eax, 4
+│           0x0804858e      8b00           mov eax, dword [eax]
+│           0x08048590      89c2           mov edx, eax
+│           0x08048592      8b44241c       mov eax, dword [var_1ch]
+│           0x08048596      8b4004         mov eax, dword [eax + 4]
+│           0x08048599      89542404       mov dword [size], edx       ; const char *src
+│           0x0804859d      890424         mov dword [esp], eax        ; char *dest
+│           0x080485a0      e83bfeffff     call sym.imp.strcpy         ; char *strcpy(char *dest, const char *src)
+│           0x080485a5      8b450c         mov eax, dword [envp]
+│           0x080485a8      83c008         add eax, 8
+│           0x080485ab      8b00           mov eax, dword [eax]
+│           0x080485ad      89c2           mov edx, eax
+│           0x080485af      8b442418       mov eax, dword [var_18h]
+│           0x080485b3      8b4004         mov eax, dword [eax + 4]
+│           0x080485b6      89542404       mov dword [size], edx       ; const char *src
+│           0x080485ba      890424         mov dword [esp], eax        ; char *dest
+│           0x080485bd      e81efeffff     call sym.imp.strcpy         ; char *strcpy(char *dest, const char *src)
+│           0x080485c2      bae9860408     mov edx, 0x80486e9
+│           0x080485c7      b8eb860408     mov eax, str._home_user_level8_.pass ; 0x80486eb ; "/home/user/level8/.pass"
+│           0x080485cc      89542404       mov dword [size], edx       ; const char *mode
+│           0x080485d0      890424         mov dword [esp], eax        ; const char *filename
+│           0x080485d3      e858feffff     call sym.imp.fopen          ; file*fopen(const char *filename, const char *mode)
+│           0x080485d8      89442408       mov dword [stream], eax     ; FILE *stream
+│           0x080485dc      c74424044400.  mov dword [size], 0x44      ; 'D'
+│                                                                      ; [0x44:4]=-1 ; 68 ; int size
+│           0x080485e4      c70424609904.  mov dword [esp], obj.c      ; [0x8049960:4]=0 ; char *s
+│           0x080485eb      e8d0fdffff     call sym.imp.fgets          ; char *fgets(char *s, int size, FILE *stream)
+│           0x080485f0      c70424038704.  mov dword [esp], 0x8048703  ; [0x8048703:4]=0x7e7e ; const char *s
+│           0x080485f7      e804feffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x080485fc      b800000000     mov eax, 0
+│           0x08048601      c9             leave
+└           0x08048602      c3             ret
+
+┌ 45: sym.m ();
+│           ; var int32_t var_4h @ esp+0x4
+│           ; var time_t var_8h @ esp+0x8
+│           0x080484f4      55             push ebp
+│           0x080484f5      89e5           mov ebp, esp
+│           0x080484f7      83ec18         sub esp, 0x18
+│           0x080484fa      c70424000000.  mov dword [esp], 0          ; time_t *timer
+│           0x08048501      e8cafeffff     call sym.imp.time           ; time_t time(time_t *timer)
+│           0x08048506      bae0860408     mov edx, str._s____d_n      ; 0x80486e0 ; "%s - %d\n"
+│           0x0804850b      89442408       mov dword [var_8h], eax
+│           0x0804850f      c74424046099.  mov dword [var_4h], obj.c   ; [0x8049960:4]=0
+│           0x08048517      891424         mov dword [esp], edx        ; const char *format
+│           0x0804851a      e891feffff     call sym.imp.printf         ; int printf(const char *format)
+│           0x0804851f      c9             leave
+└           0x08048520      c3             ret

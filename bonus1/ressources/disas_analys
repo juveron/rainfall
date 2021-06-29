@@ -1,0 +1,45 @@
+[0x08048370]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048387
+┌ 129: int main (char **envp);
+│           ; arg char **envp @ ebp+0xc
+│           ; var void *s2 @ esp+0x4
+│           ; var size_t n @ esp+0x8
+│           ; var void *s1 @ esp+0x14
+│           ; var signed int var_3ch @ esp+0x3c
+│           0x08048424      55             push ebp
+│           0x08048425      89e5           mov ebp, esp
+│           0x08048427      83e4f0         and esp, 0xfffffff0
+│           0x0804842a      83ec40         sub esp, 0x40
+│           0x0804842d      8b450c         mov eax, dword [envp]
+│           0x08048430      83c004         add eax, 4
+│           0x08048433      8b00           mov eax, dword [eax]
+│           0x08048435      890424         mov dword [esp], eax        ; const char *str
+│           0x08048438      e823ffffff     call sym.imp.atoi           ; int atoi(const char *str)
+│           0x0804843d      8944243c       mov dword [var_3ch], eax
+│           0x08048441      837c243c09     cmp dword [var_3ch], 9
+│       ┌─< 0x08048446      7e07           jle 0x804844f
+│       │   0x08048448      b801000000     mov eax, 1
+│      ┌──< 0x0804844d      eb54           jmp 0x80484a3
+│      ││   ; CODE XREF from main @ 0x8048446
+│      │└─> 0x0804844f      8b44243c       mov eax, dword [var_3ch]
+│      │    0x08048453      8d0c85000000.  lea ecx, [eax*4]
+│      │    0x0804845a      8b450c         mov eax, dword [envp]
+│      │    0x0804845d      83c008         add eax, 8
+│      │    0x08048460      8b00           mov eax, dword [eax]
+│      │    0x08048462      89c2           mov edx, eax
+│      │    0x08048464      8d442414       lea eax, [s1]
+│      │    0x08048468      894c2408       mov dword [n], ecx          ; size_t n
+│      │    0x0804846c      89542404       mov dword [s2], edx         ; const void *s2
+│      │    0x08048470      890424         mov dword [esp], eax        ; void *s1
+│      │    0x08048473      e8a8feffff     call sym.imp.memcpy         ; void *memcpy(void *s1, const void *s2, size_t n)
+│      │    0x08048478      817c243c464c.  cmp dword [var_3ch], 0x574f4c46
+│      │┌─< 0x08048480      751c           jne 0x804849e
+│      ││   0x08048482      c74424080000.  mov dword [n], 0
+│      ││   0x0804848a      c74424048085.  mov dword [s2], 0x8048580   ; [0x8048580:4]=0x2f006873
+│      ││   0x08048492      c70424838504.  mov dword [esp], str._bin_sh ; [0x8048583:4]=0x6e69622f ; "/bin/sh"
+│      ││   0x08048499      e8b2feffff     call sym.imp.execl
+│      ││   ; CODE XREF from main @ 0x8048480
+│      │└─> 0x0804849e      b800000000     mov eax, 0
+│      │    ; CODE XREF from main @ 0x804844d
+│      └──> 0x080484a3      c9             leave
+└           0x080484a4      c3             ret

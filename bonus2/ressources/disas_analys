@@ -1,0 +1,149 @@
+[0x080483d0]> pdf @main
+            ; DATA XREF from entry0 @ 0x80483e7
+┌ 271: int main (char **argv, char **envp);
+│           ; var int32_t var_ch @ ebp-0xc
+│           ; arg char **argv @ ebp+0x8
+│           ; arg char **envp @ ebp+0xc
+│           ; var char *src @ esp+0x4
+│           ; var size_t n @ esp+0x8
+│           ; var char *dest @ esp+0x50
+│           ; var char *s1 @ esp+0x9c
+│           0x08048529      55             push ebp
+│           0x0804852a      89e5           mov ebp, esp
+│           0x0804852c      57             push edi
+│           0x0804852d      56             push esi
+│           0x0804852e      53             push ebx
+│           0x0804852f      83e4f0         and esp, 0xfffffff0
+│           0x08048532      81eca0000000   sub esp, 0xa0
+│           0x08048538      837d0803       cmp dword [argv], 3
+│       ┌─< 0x0804853c      740a           je 0x8048548
+│       │   0x0804853e      b801000000     mov eax, 1
+│      ┌──< 0x08048543      e9e8000000     jmp 0x8048630
+│      ││   ; CODE XREF from main @ 0x804853c
+│      │└─> 0x08048548      8d5c2450       lea ebx, [dest]
+│      │    0x0804854c      b800000000     mov eax, 0
+│      │    0x08048551      ba13000000     mov edx, 0x13               ; 19
+│      │    0x08048556      89df           mov edi, ebx
+│      │    0x08048558      89d1           mov ecx, edx
+│      │    0x0804855a      f3ab           rep stosd dword es:[edi], eax
+│      │    0x0804855c      8b450c         mov eax, dword [envp]
+│      │    0x0804855f      83c004         add eax, 4
+│      │    0x08048562      8b00           mov eax, dword [eax]
+│      │    0x08048564      c74424082800.  mov dword [n], 0x28         ; '('
+│      │                                                               ; [0x28:4]=-1 ; 40 ; size_t  n
+│      │    0x0804856c      89442404       mov dword [src], eax        ; const char *src
+│      │    0x08048570      8d442450       lea eax, [dest]
+│      │    0x08048574      890424         mov dword [esp], eax        ; char *dest
+│      │    0x08048577      e844feffff     call sym.imp.strncpy        ; char *strncpy(char *dest, const char *src, size_t  n)
+│      │    0x0804857c      8b450c         mov eax, dword [envp]
+│      │    0x0804857f      83c008         add eax, 8
+│      │    0x08048582      8b00           mov eax, dword [eax]
+│      │    0x08048584      c74424082000.  mov dword [n], 0x20         ; [0x20:4]=-1 ; 32 ; size_t  n
+│      │    0x0804858c      89442404       mov dword [src], eax        ; const char *src
+│      │    0x08048590      8d442450       lea eax, [dest]
+│      │    0x08048594      83c028         add eax, 0x28               ; 40
+│      │    0x08048597      890424         mov dword [esp], eax        ; char *dest
+│      │    0x0804859a      e821feffff     call sym.imp.strncpy        ; char *strncpy(char *dest, const char *src, size_t  n)
+│      │    0x0804859f      c70424388704.  mov dword [esp], str.LANG   ; [0x8048738:4]=0x474e414c ; "LANG" ; const char *name
+│      │    0x080485a6      e8d5fdffff     call sym.imp.getenv         ; char *getenv(const char *name)
+│      │    0x080485ab      8984249c0000.  mov dword [s1], eax
+│      │    0x080485b2      83bc249c0000.  cmp dword [s1], 0
+│      │┌─< 0x080485ba      745c           je 0x8048618
+│      ││   0x080485bc      c74424080200.  mov dword [n], 2            ; size_t n
+│      ││   0x080485c4      c74424043d87.  mov dword [src], 0x804873d  ; [0x804873d:4]=0x6e006966 ; const void *s2
+│      ││   0x080485cc      8b84249c0000.  mov eax, dword [s1]
+│      ││   0x080485d3      890424         mov dword [esp], eax        ; const void *s1
+│      ││   0x080485d6      e885fdffff     call sym.imp.memcmp         ; int memcmp(const void *s1, const void *s2, size_t n)
+│      ││   0x080485db      85c0           test eax, eax
+│     ┌───< 0x080485dd      750c           jne 0x80485eb
+│     │││   0x080485df      c70588990408.  mov dword [obj.language], 1 ; [0x8049988:4]=0
+│    ┌────< 0x080485e9      eb2d           jmp 0x8048618
+│    ││││   ; CODE XREF from main @ 0x80485dd
+│    │└───> 0x080485eb      c74424080200.  mov dword [n], 2            ; size_t n
+│    │ ││   0x080485f3      c74424044087.  mov dword [src], 0x8048740  ; [0x8048740:4]=0x6c6e ; const void *s2
+│    │ ││   0x080485fb      8b84249c0000.  mov eax, dword [s1]
+│    │ ││   0x08048602      890424         mov dword [esp], eax        ; const void *s1
+│    │ ││   0x08048605      e856fdffff     call sym.imp.memcmp         ; int memcmp(const void *s1, const void *s2, size_t n)
+│    │ ││   0x0804860a      85c0           test eax, eax
+│    │┌───< 0x0804860c      750a           jne 0x8048618
+│    ││││   0x0804860e      c70588990408.  mov dword [obj.language], 2 ; [0x8049988:4]=0
+│    ││││   ; CODE XREFS from main @ 0x80485ba, 0x80485e9, 0x804860c
+│    └└─└─> 0x08048618      89e2           mov edx, esp
+│      │    0x0804861a      8d5c2450       lea ebx, [dest]
+│      │    0x0804861e      b813000000     mov eax, 0x13               ; 19
+│      │    0x08048623      89d7           mov edi, edx
+│      │    0x08048625      89de           mov esi, ebx
+│      │    0x08048627      89c1           mov ecx, eax
+│      │    0x08048629      f3a5           rep movsd dword es:[edi], dword ptr [esi] ; int32_t arg_8h
+│      │    0x0804862b      e854feffff     call sym.greetuser
+│      │    ; CODE XREF from main @ 0x8048543
+│      └──> 0x08048630      8d65f4         lea esp, [var_ch]
+│           0x08048633      5b             pop ebx
+│           0x08048634      5e             pop esi
+│           0x08048635      5f             pop edi
+│           0x08048636      5d             pop ebp
+└           0x08048637      c3             ret
+[0x080483d0]> pdf @sym.greetuser
+            ; CALL XREF from main @ 0x804862b
+┌ 165: sym.greetuser (int32_t arg_8h);
+│           ; var char *s1 @ ebp-0x48
+│           ; arg int32_t arg_8h @ ebp+0x8
+│           ; var char *s2 @ esp+0x4
+│           0x08048484      55             push ebp
+│           0x08048485      89e5           mov ebp, esp
+│           0x08048487      83ec58         sub esp, 0x58
+│           0x0804848a      a188990408     mov eax, dword [obj.language] ; [0x8049988:4]=0
+│           0x0804848f      83f801         cmp eax, 1                  ; 1
+│       ┌─< 0x08048492      7426           je 0x80484ba
+│       │   0x08048494      83f802         cmp eax, 2                  ; 2
+│      ┌──< 0x08048497      7450           je 0x80484e9
+│      ││   0x08048499      85c0           test eax, eax
+│     ┌───< 0x0804849b      756d           jne 0x804850a
+│     │││   0x0804849d      ba10870408     mov edx, str.Hello_         ; 0x8048710 ; "Hello "
+│     │││   0x080484a2      8d45b8         lea eax, [s1]
+│     │││   0x080484a5      8b0a           mov ecx, dword [edx]
+│     │││   0x080484a7      8908           mov dword [eax], ecx
+│     │││   0x080484a9      0fb74a04       movzx ecx, word [edx + 4]
+│     │││   0x080484ad      66894804       mov word [eax + 4], cx
+│     │││   0x080484b1      0fb65206       movzx edx, byte [edx + 6]
+│     │││   0x080484b5      885006         mov byte [eax + 6], dl
+│    ┌────< 0x080484b8      eb50           jmp 0x804850a
+│    ││││   ; CODE XREF from sym.greetuser @ 0x8048492
+│    │││└─> 0x080484ba      ba17870408     mov edx, str.Hyv_piv_       ; 0x8048717 ; "Hyv\u00e4\u00e4 p\u00e4iv\u00e4\u00e4 "
+│    │││    0x080484bf      8d45b8         lea eax, [s1]
+│    │││    0x080484c2      8b0a           mov ecx, dword [edx]
+│    │││    0x080484c4      8908           mov dword [eax], ecx
+│    │││    0x080484c6      8b4a04         mov ecx, dword [edx + 4]
+│    │││    0x080484c9      894804         mov dword [eax + 4], ecx
+│    │││    0x080484cc      8b4a08         mov ecx, dword [edx + 8]
+│    │││    0x080484cf      894808         mov dword [eax + 8], ecx
+│    │││    0x080484d2      8b4a0c         mov ecx, dword [edx + 0xc]
+│    │││    0x080484d5      89480c         mov dword [eax + 0xc], ecx
+│    │││    0x080484d8      0fb74a10       movzx ecx, word [edx + 0x10]
+│    │││    0x080484dc      66894810       mov word [eax + 0x10], cx
+│    │││    0x080484e0      0fb65212       movzx edx, byte [edx + 0x12]
+│    │││    0x080484e4      885012         mov byte [eax + 0x12], dl
+│    │││┌─< 0x080484e7      eb21           jmp 0x804850a
+│    ││││   ; CODE XREF from sym.greetuser @ 0x8048497
+│    ││└──> 0x080484e9      ba2a870408     mov edx, str.Goedemiddag__  ; 0x804872a ; "Goedemiddag! "
+│    ││ │   0x080484ee      8d45b8         lea eax, [s1]
+│    ││ │   0x080484f1      8b0a           mov ecx, dword [edx]
+│    ││ │   0x080484f3      8908           mov dword [eax], ecx
+│    ││ │   0x080484f5      8b4a04         mov ecx, dword [edx + 4]
+│    ││ │   0x080484f8      894804         mov dword [eax + 4], ecx
+│    ││ │   0x080484fb      8b4a08         mov ecx, dword [edx + 8]
+│    ││ │   0x080484fe      894808         mov dword [eax + 8], ecx
+│    ││ │   0x08048501      0fb7520c       movzx edx, word [edx + 0xc]
+│    ││ │   0x08048505      6689500c       mov word [eax + 0xc], dx
+│    ││ │   0x08048509      90             nop
+│    ││ │   ; CODE XREFS from sym.greetuser @ 0x804849b, 0x80484b8, 0x80484e7
+│    └└─└─> 0x0804850a      8d4508         lea eax, [arg_8h]
+│           0x0804850d      89442404       mov dword [s2], eax         ; const char *s2
+│           0x08048511      8d45b8         lea eax, [s1]
+│           0x08048514      890424         mov dword [esp], eax        ; char *s1
+│           0x08048517      e854feffff     call sym.imp.strcat         ; char *strcat(char *s1, const char *s2)
+│           0x0804851c      8d45b8         lea eax, [s1]
+│           0x0804851f      890424         mov dword [esp], eax        ; const char *s
+│           0x08048522      e869feffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x08048527      c9             leave
+└           0x08048528      c3             ret

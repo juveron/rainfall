@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv)
+{
+	char buffer[83];
+	FILE *stream;
+
+	f = fopen("/home/user/end/.pass", "r");
+	memset(buffer, 0, 33);
+	if ((stream == NULL) || (ac != 2)) {
+		return -1;
+	}
+	fread(buffer, 1, 66, stream);
+	buffer[16] = 0;
+	buffer[atoi(argv[1])] = 0;
+	fread(&buffer[17], 1, 65, stream); //
+	fclose(stream);
+	if (strcmp(buffer, argv[1]) == 0) {
+		execl("/bin/sh", "sh", 0);
+	} else {
+		puts(&buffer[17]);
+	}
+	return 0;
+}

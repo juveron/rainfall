@@ -1,0 +1,92 @@
+[0x08048440]> pdf @main
+            ; DATA XREF from entry0 @ 0x8048457
+┌ 296: int main (char **argv, char **envp);
+│           ; var int32_t var_8h @ ebp-0x8
+│           ; arg char **argv @ ebp+0x8
+│           ; arg char **envp @ ebp+0xc
+│           ; var char *size @ esp+0x4
+│           ; var size_t nmemb @ esp+0x8
+│           ; var file*stream @ esp+0xc
+│           ; var char *ptr @ esp+0x18
+│           ; var int32_t var_59h @ esp+0x59
+│           ; var file*var_9ch @ esp+0x9c
+│           0x080484f4      55             push ebp
+│           0x080484f5      89e5           mov ebp, esp
+│           0x080484f7      57             push edi
+│           0x080484f8      53             push ebx
+│           0x080484f9      83e4f0         and esp, 0xfffffff0
+│           0x080484fc      81eca0000000   sub esp, 0xa0
+│           0x08048502      baf0860408     mov edx, 0x80486f0
+│           0x08048507      b8f2860408     mov eax, str._home_user_end_.pass ; 0x80486f2 ; "/home/user/end/.pass"
+│           0x0804850c      89542404       mov dword [size], edx       ; const char *mode
+│           0x08048510      890424         mov dword [esp], eax        ; const char *filename
+│           0x08048513      e8f8feffff     call sym.imp.fopen          ; file*fopen(const char *filename, const char *mode)
+│           0x08048518      8984249c0000.  mov dword [var_9ch], eax
+│           0x0804851f      8d5c2418       lea ebx, [ptr]
+│           0x08048523      b800000000     mov eax, 0
+│           0x08048528      ba21000000     mov edx, 0x21               ; '!' ; 33
+│           0x0804852d      89df           mov edi, ebx
+│           0x0804852f      89d1           mov ecx, edx
+│           0x08048531      f3ab           rep stosd dword es:[edi], eax
+│           0x08048533      83bc249c0000.  cmp dword [var_9ch], 0
+│       ┌─< 0x0804853b      7406           je 0x8048543
+│       │   0x0804853d      837d0802       cmp dword [argv], 2
+│      ┌──< 0x08048541      740a           je 0x804854d
+│      ││   ; CODE XREF from main @ 0x804853b
+│      │└─> 0x08048543      b8ffffffff     mov eax, 0xffffffff         ; -1
+│      │┌─< 0x08048548      e9c8000000     jmp 0x8048615
+│      ││   ; CODE XREF from main @ 0x8048541
+│      └──> 0x0804854d      8d442418       lea eax, [ptr]
+│       │   0x08048551      8b94249c0000.  mov edx, dword [var_9ch]
+│       │   0x08048558      8954240c       mov dword [stream], edx     ; FILE *stream
+│       │   0x0804855c      c74424084200.  mov dword [nmemb], 0x42     ; 'B'
+│       │                                                              ; [0x42:4]=-1 ; 66 ; size_t nmemb
+│       │   0x08048564      c74424040100.  mov dword [size], 1         ; size_t size
+│       │   0x0804856c      890424         mov dword [esp], eax        ; void *ptr
+│       │   0x0804856f      e85cfeffff     call sym.imp.fread          ; size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
+│       │   0x08048574      c644245900     mov byte [var_59h], 0
+│       │   0x08048579      8b450c         mov eax, dword [envp]
+│       │   0x0804857c      83c004         add eax, 4
+│       │   0x0804857f      8b00           mov eax, dword [eax]
+│       │   0x08048581      890424         mov dword [esp], eax        ; const char *str
+│       │   0x08048584      e8a7feffff     call sym.imp.atoi           ; int atoi(const char *str)
+│       │   0x08048589      c644041800     mov byte [esp + eax + 0x18], 0
+│       │   0x0804858e      8d442418       lea eax, [ptr]
+│       │   0x08048592      8d5042         lea edx, [eax + 0x42]
+│       │   0x08048595      8b84249c0000.  mov eax, dword [var_9ch]
+│       │   0x0804859c      8944240c       mov dword [stream], eax     ; FILE *stream
+│       │   0x080485a0      c74424084100.  mov dword [nmemb], 0x41     ; 'A'
+│       │                                                              ; [0x41:4]=-1 ; 65 ; size_t nmemb
+│       │   0x080485a8      c74424040100.  mov dword [size], 1         ; size_t size
+│       │   0x080485b0      891424         mov dword [esp], edx        ; void *ptr
+│       │   0x080485b3      e818feffff     call sym.imp.fread          ; size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
+│       │   0x080485b8      8b84249c0000.  mov eax, dword [var_9ch]
+│       │   0x080485bf      890424         mov dword [esp], eax        ; FILE *stream
+│       │   0x080485c2      e8f9fdffff     call sym.imp.fclose         ; int fclose(FILE *stream)
+│       │   0x080485c7      8b450c         mov eax, dword [envp]
+│       │   0x080485ca      83c004         add eax, 4
+│       │   0x080485cd      8b00           mov eax, dword [eax]
+│       │   0x080485cf      89442404       mov dword [size], eax       ; const char *s2
+│       │   0x080485d3      8d442418       lea eax, [ptr]
+│       │   0x080485d7      890424         mov dword [esp], eax        ; const char *s1
+│       │   0x080485da      e8d1fdffff     call sym.imp.strcmp         ; int strcmp(const char *s1, const char *s2)
+│       │   0x080485df      85c0           test eax, eax
+│      ┌──< 0x080485e1      751e           jne 0x8048601
+│      ││   0x080485e3      c74424080000.  mov dword [nmemb], 0
+│      ││   0x080485eb      c74424040787.  mov dword [size], 0x8048707 ; [0x8048707:4]=0x2f006873
+│      ││   0x080485f3      c704240a8704.  mov dword [esp], str._bin_sh ; [0x804870a:4]=0x6e69622f ; "/bin/sh"
+│      ││   0x080485fa      e821feffff     call sym.imp.execl
+│     ┌───< 0x080485ff      eb0f           jmp 0x8048610
+│     │││   ; CODE XREF from main @ 0x80485e1
+│     │└──> 0x08048601      8d442418       lea eax, [ptr]
+│     │ │   0x08048605      83c042         add eax, 0x42               ; 66
+│     │ │   0x08048608      890424         mov dword [esp], eax        ; const char *s
+│     │ │   0x0804860b      e8d0fdffff     call sym.imp.puts           ; int puts(const char *s)
+│     │ │   ; CODE XREF from main @ 0x80485ff
+│     └───> 0x08048610      b800000000     mov eax, 0
+│       │   ; CODE XREF from main @ 0x8048548
+│       └─> 0x08048615      8d65f8         lea esp, [var_8h]
+│           0x08048618      5b             pop ebx
+│           0x08048619      5f             pop edi
+│           0x0804861a      5d             pop ebp
+└           0x0804861b      c3             ret

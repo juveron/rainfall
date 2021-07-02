@@ -1,0 +1,15 @@
+Ce binaire ne renvois rien si aucun argument est passer. Cependant avec un seul il renvoi une new line.
+
+
+Apres analyse, voir disas_analys et source.
+
+On constate que le buffer est mis a 0 puis le retour d'un atoi de argv[1] lui est passé
+Ensuite le buffer et argv[1] sont comparé, si les deux chaine sont identique alors ca ouvre un /bin/sh
+
+Le seul carac qui est = 0 vallant donc 4 bytes serai un '\0'. Donc on essaye de mettre un argument vide
+
+bonus3@RainFall:~$ ./bonus3 ""
+$ whoami
+end
+$ cat /home/user/end/.pass
+3321b6f81659f9a71c76616f606e4b50189cecfea611393d5d649f75e157353c

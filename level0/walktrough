@@ -1,4 +1,4 @@
-Dans un premier temps nous avons etudier le comportement du binaire
+Dans un premier temps nous allons etudier le comportement du binaire
 
 avec un ou plusieurs argv le binaire renvois un "No !"
 
@@ -11,7 +11,7 @@ Ce qui retien notre attention apres relecture c'est :
 0x08048ed9 <+25>:	cmp    $0x1a7,%eax ;
 cette ligne utilise cmp. C'est une instruction qui permet de comparer la sources (eax) avec la destination (0x1a70)
 
-Nous voulions donc reproduire ce cas de figure car le programme peut prendre un argument
+On va donc reproduire ce cas de figure car le programme peut prendre un argument
 on re execute le binaire avec 0x1a7 comme argv. On obtien encore un No !
 
 Apres relecture on remarque le call de la function atoi
@@ -25,4 +25,5 @@ On va donc essayer avec une convertion de notre valeur en hexa en decimal ce qui
 
 un bash s'ouvre. Se referent au sujet en faisant un cat /home/user/level1/.pass on obtient 1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a
 
-Cependant en faisant un whoami on obtient level1 ce qui prouve que de part l'exploitation de cette faille on a pu cree une elevation de privilege car le bash est executer par level0 dont le proprio est level1
+Cependant en faisant un whoami on obtient level1 ce qui prouve que de part l'exploitation
+de cette faille on a pu cree une elevation de privilege car le bash est executer par level0 dont le proprio est level1
